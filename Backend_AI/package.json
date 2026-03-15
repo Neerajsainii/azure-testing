@@ -1,0 +1,34 @@
+{
+  "name": "aditya_ston",
+  "version": "1.0.0",
+  "description": "This project analyzes resumes, job descriptions, and project write‑ups using OpenAI and returns clear, consistent JSON you can use in any backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "openai": "^6.10.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ADITYAKUMAR-AIML/integrate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ADITYAKUMAR-AIML/integrate/issues"
+  },
+  "homepage": "https://github.com/ADITYAKUMAR-AIML/integrate#readme"
+}

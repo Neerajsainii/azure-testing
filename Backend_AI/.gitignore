@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.crt
+config/*.local.*
+docker-compose.*.env
+coverage/
+.nyc_output/
+*.log

@@ -1,0 +1,25 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "route": "{*restOfPath}",
+      "methods": [
+        "delete",
+        "get",
+        "head",
+        "options",
+        "patch",
+        "post",
+        "put"
+      ]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ]
+}

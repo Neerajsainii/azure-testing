@@ -1,0 +1,13 @@
+const assert = require("assert")
+const { LruTtlCache } = require("../utils/cache")
+;(async () => {
+  const cache = new LruTtlCache({ maxSize: 2, ttlMs: 50 })
+  cache.set("a", 1)
+  cache.set("b", 2)
+  assert.strictEqual(cache.get("a"), 1)
+  cache.set("c", 3)
+  assert.strictEqual(cache.get("b"), undefined)
+  await new Promise((r) => setTimeout(r, 60))
+  assert.strictEqual(cache.get("a"), undefined)
+  console.log("cache.test passed")
+})()

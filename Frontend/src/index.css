@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure app background covers entire viewport and prevents white gaps during overscroll/drag */
+html, body, #root {
+  height: 100%;
+  background: linear-gradient(180deg, #0b0424 0%, #1a0f4a 50%, #2b1d77 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: #0b0424; /* fallback for older browsers */
+  overscroll-behavior-y: contain; /* prevent white 'rubber-band' on supported browsers */
+}
+
+/* Hide scrollbar but keep scroll functionality */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Small animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 420ms ease both;
+}
+
+.slide-up {
+  animation: slideUp 520ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+.lift-on-hover {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.lift-on-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.35);
+}
+
+.soft-transition { transition: all 160ms ease; }
+
+/* Dark-friendly form controls to avoid white native dropdowns on dark backgrounds */
+select, option, input, textarea {
+  background-color: rgba(11,18,40,0.6);
+  color: rgba(255,255,255,0.95);
+  border-color: rgba(255,255,255,0.06);
+}
+
+select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+
+/* Small helper for native selects when they are still used */
+.select-wrapper { position: relative; display: inline-block; }
+.select-wrapper::after { content: '\25BE'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: rgba(255,255,255,0.6); }
+
+/* Unified header style (dark-blue gradient used across dashboards) */
+.app-header {
+  background: linear-gradient(90deg, #07102a 0%, #16244f 50%, #253a74 100%);
+}
+.app-header .title { color: #ffffff; }
+
+/* Decorative animated blobs and subtle hero effects */
+@keyframes blob {
+  0% { transform: translateY(0) scale(1); }
+  33% { transform: translateY(-8px) scale(1.03); }
+  66% { transform: translateY(6px) scale(0.99); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(139,92,246,0.36); }
+  70% { box-shadow: 0 14px 40px 10px rgba(139,92,246,0.06); }
+  100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
+}
+
+.animate-blob { animation: blob 7s ease-in-out infinite; }
+.animate-blob-slow { animation: blob 10s ease-in-out infinite; }
+.float-blob { animation: blob 6.5s ease-in-out infinite; }
+.glow { animation: pulseGlow 3s infinite; }
+
+/* Small entrance helpers with slight stagger if applied with inline style delays */
+.fade-in-fast { animation: fadeIn 360ms ease both; }
+.slide-up-smooth { animation: slideUp 520ms cubic-bezier(.2,.9,.2,1) both; }
+
+/* Make hero buttons feel more alive */
+.hero-cta { box-shadow: 0 8px 30px rgba(2,6,23,0.35); }
+
+/* Mobile adjustments: neutralize desktop left-margin utility when on small screens */
+@media (max-width: 767px) {
+  .ml-64 { margin-left: 0 !important; }
+}
+
+/* Respect device safe area insets for notches */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}

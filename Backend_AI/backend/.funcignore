@@ -1,0 +1,31 @@
+# ── Secrets & local config ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# ── Source control ────────────────────────────────────────────────────────────
+.git
+.gitignore
+.github
+
+# ── Dev / test artifacts ──────────────────────────────────────────────────────
+tests
+scripts
+*.test.js
+*.spec.js
+server.log
+drop_index.js
+test-principal.js
+test-*.js
+
+# ── Editor & OS noise ─────────────────────────────────────────────────────────
+.vscode
+.idea
+*.DS_Store
+Thumbs.db
+
+# ── Local-only dev tools (in devDependencies — not installed by Oryx
+#    production build, but belt-and-suspenders just in case) ──────────────────
+node_modules/nodemon
+node_modules/.cache

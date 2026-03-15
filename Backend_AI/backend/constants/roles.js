@@ -1,0 +1,25 @@
+const ROLES = Object.freeze({
+  PLATFORM_ADMIN: "platform_admin",
+  PRINCIPAL: "principal",
+  PLACEMENT_OFFICER: "placement_officer",
+  HOD: "hod",
+  STUDENT: "student",
+  STANDALONE_STUDENT: "standalone_student",
+  // Legacy roles kept for backward compatibility with existing records.
+  PLACEMENT: "placement",
+  ADMIN: "admin",
+})
+
+const ROLE_GROUPS = Object.freeze({
+  PRINCIPAL_MANAGED: [ROLES.PRINCIPAL, ROLES.PLACEMENT_OFFICER, ROLES.HOD],
+  STAFF_ACCESS: [ROLES.PLATFORM_ADMIN, ROLES.PRINCIPAL, ROLES.PLACEMENT_OFFICER, ROLES.HOD],
+  COMPANY_MANAGEMENT: [ROLES.PLACEMENT_OFFICER, ROLES.PRINCIPAL, ROLES.PLATFORM_ADMIN],
+  ADMIN_REPORTING: [ROLES.PLATFORM_ADMIN],
+  PLACEMENT_REPORTING: [ROLES.PLACEMENT_OFFICER],
+  UG_BYPASS: [ROLES.PLATFORM_ADMIN, ROLES.PRINCIPAL],
+})
+
+module.exports = {
+  ROLES,
+  ROLE_GROUPS,
+}

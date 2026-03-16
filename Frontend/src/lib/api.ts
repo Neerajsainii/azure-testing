@@ -190,11 +190,11 @@ export const companiesAPI = {
 export const adminAPI = {
   getDashboard: () => apiClient.get("/api/admin/dashboard"),
   getColleges: () => apiClient.get("/api/admin/colleges"),
-  createCollege: (data: { name: string; departmentLimit?: number | null; studentLimit?: number | null; status?: "active" | "inactive" }) =>
+  createCollege: (data: { name: string; departmentLimit?: number | null; status?: "active" | "inactive" }) =>
     apiClient.post("/api/admin/colleges", data),
   updateCollege: (
     id: string,
-    data: { name?: string; departmentLimit?: number | null; studentLimit?: number | null; status?: "active" | "inactive" }
+    data: { name?: string; departmentLimit?: number | null; status?: "active" | "inactive" }
   ) => apiClient.put(`/api/admin/colleges/${id}`, data),
   deleteCollege: (id: string) => apiClient.delete(`/api/admin/colleges/${id}`),
   getPrincipals: () => apiClient.get("/api/admin/principals"),

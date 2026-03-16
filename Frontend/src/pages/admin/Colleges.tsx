@@ -19,8 +19,6 @@ interface College {
   location?: string
   principalName?: string
   studentCount?: number
-  studentLimit?: number | null
-  remainingStudentSlots?: number | null
   departmentCount?: number
   departmentLimit?: number | null
   remainingDepartmentSlots?: number | null
@@ -37,8 +35,6 @@ export default function AdminCollegesPage() {
     location: "",
     principalName: "",
     studentCount: 0,
-    studentLimit: null,
-    remainingStudentSlots: null,
     departmentCount: 0,
     departmentLimit: null,
     remainingDepartmentSlots: null,
@@ -47,6 +43,7 @@ export default function AdminCollegesPage() {
 
   const [colleges, setColleges] = useState<College[]>([])
 
+  // Fetch colleges from backend
   useEffect(() => {
     fetchColleges()
   }, [])
@@ -55,14 +52,13 @@ export default function AdminCollegesPage() {
     try {
       setLoading(true)
       const res = await adminAPI.getColleges()
+      // Map backend data to frontend interface
       const mappedColleges = res.data.map((c: any) => ({
         _id: c._id,
         name: c.name,
         location: c.location || "Not Specified",
         principalName: c.principalName || "Unassigned",
         studentCount: c.studentCount || 0,
-        studentLimit: c.studentLimit ?? null,
-        remainingStudentSlots: c.remainingStudentSlots ?? null,
         departmentCount: c.departmentCount || 0,
         departmentLimit: c.departmentLimit ?? null,
         remainingDepartmentSlots: c.remainingDepartmentSlots ?? null,
@@ -83,8 +79,6 @@ export default function AdminCollegesPage() {
       location: "",
       principalName: "",
       studentCount: 0,
-      studentLimit: null,
-      remainingStudentSlots: null,
       departmentCount: 0,
       departmentLimit: null,
       remainingDepartmentSlots: null,
@@ -100,8 +94,6 @@ export default function AdminCollegesPage() {
       location: college.location || "",
       principalName: college.principalName || "",
       studentCount: college.studentCount || 0,
-      studentLimit: college.studentLimit ?? null,
-      remainingStudentSlots: college.remainingStudentSlots ?? null,
       departmentCount: college.departmentCount || 0,
       departmentLimit: college.departmentLimit ?? null,
       remainingDepartmentSlots: college.remainingDepartmentSlots ?? null,
@@ -110,18 +102,16 @@ export default function AdminCollegesPage() {
     setIsModalOpen(true)
   }
 
-  const handleDeleteCollege = async (id: string, name: string) => {
-    const confirmed = confirm(
-      `⚠️ PERMANENT DELETE\n\nAre you sure you want to delete "${name}"?\n\nThis will permanently remove:\n• The college and all its departments\n• All students, HODs, Principals, and Placement Officers\n• All resumes, invitations, placement drives, and related data\n\nThis action CANNOT be undone.`
-    )
-    if (!confirmed) return
-    try {
-      await adminAPI.deleteCollege(id)
-      setColleges(colleges.filter((c) => c._id !== id))
-      alert(`College "${name}" and all its data have been permanently deleted.`)
-    } catch (error: any) {
-      console.error("Failed to delete college:", error)
-      alert(error?.response?.data?.message || "Failed to delete college")
+  const handleDeleteCollege = async (id: string) => {
+    if (confirm("Are you sure you want to delete this college?")) {
+      try {
+        await adminAPI.deleteCollege(id)
+        setColleges(colleges.filter((c) => c._id !== id))
+        alert("College deleted successfully!")
+      } catch (error) {
+        console.error("Failed to delete college:", error)
+        alert("Failed to delete college")
+      }
     }
   }
 
@@ -133,21 +123,15 @@ export default function AdminCollegesPage() {
 
     try {
       // Send 0 to backend for "unlimited" (backend normalizes 0 -> null)
-      const departmentLimitPayload =
-        !formData.departmentLimit || formData.departmentLimit <= 0
-          ? 0
-          : formData.departmentLimit
-
-      const studentLimitPayload =
-        !formData.studentLimit || formData.studentLimit <= 0
-          ? 0
-          : formData.studentLimit
+      const departmentLimitPayload = (!formData.departmentLimit || formData.departmentLimit <= 0)
+        ? 0
+        : formData.departmentLimit
 
       if (editingCollegeId) {
+        // Update existing college
         const res = await adminAPI.updateCollege(editingCollegeId, {
           name: formData.name,
           departmentLimit: departmentLimitPayload,
-          studentLimit: studentLimitPayload,
           status: formData.status,
         })
         const updated = res.data || {}
@@ -160,9 +144,6 @@ export default function AdminCollegesPage() {
                 departmentLimit: updated.departmentLimit ?? formData.departmentLimit ?? null,
                 departmentCount: updated.departmentCount ?? college.departmentCount ?? 0,
                 remainingDepartmentSlots: updated.remainingDepartmentSlots ?? college.remainingDepartmentSlots ?? null,
-                studentLimit: updated.studentLimit ?? formData.studentLimit ?? null,
-                studentCount: updated.studentCount ?? college.studentCount ?? 0,
-                remainingStudentSlots: updated.remainingStudentSlots ?? college.remainingStudentSlots ?? null,
                 status: (updated.status || formData.status || "active") as "active" | "inactive",
               }
               : college
@@ -170,33 +151,31 @@ export default function AdminCollegesPage() {
         )
         alert("College updated successfully!")
       } else {
+        // Create new college
         const res = await adminAPI.createCollege({
           name: formData.name,
           departmentLimit: departmentLimitPayload,
-          studentLimit: studentLimitPayload,
           status: formData.status,
         })
-        const newCollege: College = {
+        const newCollege = {
           _id: res.data._id,
           name: res.data.name,
           location: formData.location || "Not Specified",
           principalName: formData.principalName || "Unassigned",
-          studentCount: res.data.studentCount || 0,
-          studentLimit: res.data.studentLimit ?? formData.studentLimit ?? null,
-          remainingStudentSlots: res.data.remainingStudentSlots ?? null,
+          studentCount: formData.studentCount || 0,
           departmentCount: res.data.departmentCount || 0,
           departmentLimit: res.data.departmentLimit ?? formData.departmentLimit ?? null,
           remainingDepartmentSlots: res.data.remainingDepartmentSlots ?? null,
           status: (res.data.status || formData.status || "active") as "active" | "inactive",
         }
-        setColleges([newCollege, ...colleges])
+        setColleges([newCollege as College, ...colleges])
         alert("College created successfully!")
       }
       setIsModalOpen(false)
       setEditingCollegeId(null)
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to save college:", error)
-      alert(error?.response?.data?.message || "Failed to save college")
+      alert("Failed to save college")
     }
   }
 
@@ -267,13 +246,7 @@ export default function AdminCollegesPage() {
                         </div>
                         <div className="flex items-center gap-2 text-white/70 text-sm mb-1">
                           <Users className="w-4 h-4" />
-                          <span>
-                            Students: {college.studentCount || 0}
-                            {" / "}
-                            {college.studentLimit === null || college.studentLimit === undefined
-                              ? "Unlimited"
-                              : college.studentLimit}
-                          </span>
+                          <span>{college.studentCount} Students</span>
                         </div>
                         <div className="flex items-center gap-2 text-white/70 text-sm mb-1">
                           <Building2 className="w-4 h-4" />
@@ -306,7 +279,7 @@ export default function AdminCollegesPage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDeleteCollege(college._id, college.name)}
+                        onClick={() => handleDeleteCollege(college._id)}
                         className="flex-1 px-4 py-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition flex items-center justify-center gap-2"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -330,7 +303,7 @@ export default function AdminCollegesPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
-          <div className="bg-[#15193c] w-full max-w-lg rounded-xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#15193c] w-full max-w-lg rounded-xl border border-white/10 shadow-2xl">
             <div className="px-6 py-4 border-b border-white/10">
               <h2 className="text-xl font-bold text-white">
                 {editingCollegeId ? "Edit College" : "Add College"}
@@ -365,47 +338,36 @@ export default function AdminCollegesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-2">
-                  Department Limit <span className="text-white/40">(leave empty for Unlimited)</span>
-                </label>
+                <label className="block text-sm text-white/70 mb-2">Student Count</label>
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  value={
-                    formData.departmentLimit === null || formData.departmentLimit === 0
-                      ? ""
-                      : String(formData.departmentLimit)
+                  type="number"
+                  min={0}
+                  value={formData.studentCount}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      studentCount: Number.isNaN(Number(e.target.value))
+                        ? 0
+                        : Number(e.target.value),
+                    })
                   }
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/[^0-9]/g, "")
-                    if (raw === "" || raw === "0") {
-                      setFormData({ ...formData, departmentLimit: null })
-                    } else {
-                      setFormData({ ...formData, departmentLimit: parseInt(raw, 10) })
-                    }
-                  }}
-                  placeholder="Leave empty for Unlimited"
-                  className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-2">
-                  Student Limit <span className="text-white/40">(leave empty for Unlimited)</span>
-                </label>
+                <label className="block text-sm text-white/70 mb-2">Department Limit <span className="text-white/40">(leave empty for Unlimited)</span></label>
                 <input
                   type="text"
                   inputMode="numeric"
-                  value={
-                    formData.studentLimit === null || formData.studentLimit === 0
-                      ? ""
-                      : String(formData.studentLimit)
-                  }
+                  value={formData.departmentLimit === null || formData.departmentLimit === 0 ? "" : String(formData.departmentLimit)}
                   onChange={(e) => {
-                    const raw = e.target.value.replace(/[^0-9]/g, "")
+                    const raw = e.target.value.replace(/[^0-9]/g, "") // digits only
                     if (raw === "" || raw === "0") {
-                      setFormData({ ...formData, studentLimit: null })
+                      setFormData({ ...formData, departmentLimit: null })
                     } else {
-                      setFormData({ ...formData, studentLimit: parseInt(raw, 10) })
+                      // strip leading zeros e.g. "05" -> "5"
+                      const stripped = String(parseInt(raw, 10))
+                      setFormData({ ...formData, departmentLimit: parseInt(stripped, 10) })
                     }
                   }}
                   placeholder="Leave empty for Unlimited"

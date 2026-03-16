@@ -8,8 +8,8 @@ const faqs = [
     a: "Because colleges rely on people instead of systems. When knowledge lives in heads, WhatsApp chats, and Excel files, chaos is guaranteed. STON CV turns placements into a controlled operation, not an annual fire drill."
   },
   {
-    q: "We've managed placements for years. Why change now?",
-    a: "You didn't “manage” — you survived. Manual systems don't scale, don't audit, and don't protect you when things go wrong. Past survival is not future safety."
+    q: "We’ve managed placements for years. Why change now?",
+    a: "You didn’t “manage” — you survived. Manual systems don’t scale, don’t audit, and don’t protect you when things go wrong. Past survival is not future safety."
   },
   {
     q: "Will this increase workload for my placement team?",
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Will this expose mistakes or weak areas in our placement process?",
-    a: "Yes — and that's the point. Weakness exists whether you see it or not. STON CV exposes gaps early so they can be fixed before placement season, not during audits or complaints."
+    a: "Yes — and that’s the point. Weakness exists whether you see it or not. STON CV exposes gaps early so they can be fixed before placement season, not during audits or complaints."
   },
   {
     q: "Does this take control away from placement officers?",
@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     q: "What happens if we stop using the platform later?",
-    a: "Your data remains yours. Processes don't vanish. But once placements are systemized, most colleges never want to go back."
+    a: "Your data remains yours. Processes don’t vanish. But once placements are systemized, most colleges never want to go back."
   },
   {
     q: "Is this just another software subscription?",
@@ -142,15 +142,12 @@ export default function LandingPage() {
 
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4 fade-in-fast">Placement Execution Engine</h1>
-            <p className="text-white/80 mb-6 slide-up-smooth">Run placements with structure, discipline, and clear visibility through our centralized Platform. Access your Dashboard to manage the entire lifecycle.</p>
-            <div className="flex flex-col sm:flex-row items-center gap-4 slide-up-smooth">
-              <Link to="/login" className="inline-flex items-center gap-3 bg-white text-black px-6 py-3 rounded-full font-semibold hero-cta lift-on-hover glow">Request a Placement Overview <ArrowRight className="w-4 h-4" /></Link>
-              <a href="#about" className="inline-flex items-center gap-2 text-white/90 hover:text-white px-2 py-3 rounded-full font-medium underline-offset-4 hover:underline">Learn more</a>
-            </div>
+            <p className="text-white/80 mb-6 slide-up-smooth">Run placements with structure, discipline, and clear visibility — in one system.</p>
+            <Link to="/login" className="inline-flex items-center gap-3 bg-white text-black px-6 py-3 rounded-full font-semibold hero-cta lift-on-hover glow">Request a Placement Overview <ArrowRight className="w-4 h-4" /></Link>
           </div>
 
           <div className="relative w-full max-w-md mx-auto">
-            <div className="absolute inset-0 bg-[#6c5ce7]/30 blur-3xl rounded-full"></div>
+            <div className="absolute inset-0 bg-[#6c5ce7]/30 blur-3xl rounded-full" />
             <img src="/image/hero.png" alt="hero" className="relative z-10 w-full h-auto object-contain float-blob" loading="lazy" />
           </div>
         </section>
@@ -244,7 +241,7 @@ export default function LandingPage() {
         <section id="contact" className="mt-20">
           <div className="max-w-xl mx-auto px-4">
             <h2 className="text-2xl font-semibold text-center">Get In Touch</h2>
-            <p className="text-white/80 text-center mt-2 text-sm">Have questions or want a placement overview?<br />Share your details and we'll get back to you.</p>
+            <p className="text-white/80 text-center mt-2 text-sm">Have questions or want a placement overview?<br />Share your details and we’ll get back to you.</p>
             <form className="mt-8 space-y-4" onSubmit={handleContactSubmit}>
               <label htmlFor="contact-name" className="sr-only">Name</label>
               <input 

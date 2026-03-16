@@ -59,6 +59,10 @@ export default function PrincipalGrantedAccessPage() {
 
   const [editingGrant, setEditingGrant] = useState<AccessGrant | null>(null)
 
+  const handleEditAccess = (grantId: string) => {
+    const g = accessGrants.find((x) => x.id === grantId)
+    if (g) setEditingGrant({ ...g })
+  }
 
   const handleSaveEdit = () => {
     if (!editingGrant) return
@@ -67,6 +71,14 @@ export default function PrincipalGrantedAccessPage() {
     setEditingGrant(null)
   }
 
+  const handleRevokeAccess = (grantId: string) => {
+    if (confirm("Are you sure you want to revoke this access?")) {
+      // In a real app, call API to suspend user
+      setAccessGrants(accessGrants.map((g) =>
+        g.id === grantId ? { ...g, status: "expired" as const } : g
+      ))
+    }
+  }
 
   const filteredGrants = accessGrants.filter((grant) => {
     const matchesSearch =
@@ -217,8 +229,8 @@ export default function PrincipalGrantedAccessPage() {
                       <th className="px-6 py-4 text-left text-white font-semibold">Role</th>
                       <th className="px-6 py-4 text-left text-white font-semibold">Department</th>
                       <th className="px-6 py-4 text-left text-white font-semibold">Access Type</th>
-                      <th className="px-6 py-4 text-left text-white font-semibold">Invitation Status</th>
-                      {/* <th className="px-6 py-4 text-left text-white font-semibold">Actions</th> */}
+                      <th className="px-6 py-4 text-left text-white font-semibold">Status</th>
+                      <th className="px-6 py-4 text-left text-white font-semibold">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/10">
@@ -248,7 +260,7 @@ export default function PrincipalGrantedAccessPage() {
                             {grant.status.toUpperCase()}
                           </span>
                         </td>
-                        {/* <td className="px-6 py-4">
+                        <td className="px-6 py-4">
                           <div className="flex gap-2">
                             <button
                               onClick={() => handleEditAccess(grant.id)}
@@ -265,7 +277,7 @@ export default function PrincipalGrantedAccessPage() {
                               </button>
                             )}
                           </div>
-                        </td> */}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

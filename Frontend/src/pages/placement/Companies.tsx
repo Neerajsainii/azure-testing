@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { TrendingUp, Plus, Search, Trash2, MapPin, Users, Star } from "lucide-react"
+import { TrendingUp, Plus, Search, Trash2, MapPin, Users, Star, FileText } from "lucide-react"
 import PlacementSidebar from "@/components/placement-sidebar"
 import { companiesAPI } from "@/lib/api"
 import type { Company } from "@/types/company"
@@ -25,7 +25,7 @@ export default function PlacementCompaniesPage() {
 
   // Shortlist State
   const [showShortlist, setShowShortlist] = useState(false)
-  const [selectedCompanyId] = useState<string | null>(null) // reserved for when shortlist button is re-enabled
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null)
   const [shortlistData, setShortlistData] = useState<any>(null)
   const [shortlistLoading, setShortlistLoading] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
@@ -96,8 +96,19 @@ export default function PlacementCompaniesPage() {
     }
   }
 
-  // onOpenShortlist is available if the shortlist button is re-enabled
-  // const onOpenShortlist = async (id: string) => { ... }
+  const onOpenShortlist = async (id: string) => {
+    setSelectedCompanyId(id)
+    setShowShortlist(true)
+    setShortlistLoading(true)
+    try {
+      const res = await companiesAPI.getShortlist(id)
+      setShortlistData(res.data)
+    } catch (e) {
+      setShortlistData(null)
+    } finally {
+      setShortlistLoading(false)
+    }
+  }
 
   const onRunShortlist = async () => {
     if (!selectedCompanyId) return

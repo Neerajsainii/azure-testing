@@ -24,15 +24,6 @@ export default function Login() {
   }, [isAuthenticated, navigate, backendSession])
 
   if (isAuthenticated) {
-    if (!backendSession) {
-      // Waiting for backendSession to resolve its redirect path,
-      // or the session fetch failed (which will soon flip isAuthenticated to false).
-      return (
-        <div className="flex min-h-screen items-center justify-center bg-[#0b0424]">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
-        </div>
-      )
-    }
     return null
   }
 

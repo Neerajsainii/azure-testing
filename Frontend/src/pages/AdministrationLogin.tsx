@@ -32,13 +32,6 @@ export default function AdministrationLogin() {
   }, [isAuthenticated, navigate, backendSession])
 
   if (isAuthenticated) {
-    if (!backendSession) {
-      return (
-        <div className="flex min-h-screen items-center justify-center bg-[#0b0424]">
-          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
-        </div>
-      )
-    }
     return null
   }
 

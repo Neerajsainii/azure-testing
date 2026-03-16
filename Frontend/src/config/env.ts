@@ -4,13 +4,13 @@ function normalizeUrl(u: string): string {
   return u.replace(/\/+$/, "")
 }
 
-const defaultApiUrl = ""
+const defaultApiUrl = "http://localhost:5000"
 const EnvSchema = z.object({
   VITE_API_URL: z.preprocess(
-    (val) => (typeof val === "string" ? val : defaultApiUrl),
-    z.string().optional().default(defaultApiUrl)
+    (val) => (typeof val === "string" && val.trim() ? val : defaultApiUrl),
+    z.string().url()
   ),
-  VITE_GOOGLE_AUTH_URL: z.string().min(1).optional(),
+  VITE_GOOGLE_AUTH_URL: z.string().url().optional(),
 })
 
 const parsed = EnvSchema.safeParse(import.meta.env)

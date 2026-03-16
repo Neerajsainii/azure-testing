@@ -107,16 +107,6 @@ export function BackendSessionProvider({ children }: { children: ReactNode }) {
         allowedBasePaths: string[]
       }>("/api/auth/session")
       const data = res.data
-
-      // If the backend returns a 204 No Content, data will be empty/undefined.
-      // Additionally, if the data structure gets corrupted, safety check `data.user`.
-      if (!data || !data.user) {
-        setToken(null)
-        setSessionState(null)
-        clearCsrfToken()
-        return null
-      }
-
       setCsrfToken(data.csrfToken || null)
       const s: BackendSession = {
         role: data.user.role as BackendRole,
@@ -129,7 +119,6 @@ export function BackendSessionProvider({ children }: { children: ReactNode }) {
       setSessionState(s)
       return s
     } catch (err: unknown) {
-      console.error("[BackendSession] Refresh failed:", err)
       const status = (err as { response?: { status?: number } })?.response?.status
       if (status === 401) setToken(null)
       setSessionState(null)

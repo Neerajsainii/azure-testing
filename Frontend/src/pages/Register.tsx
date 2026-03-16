@@ -25,19 +25,11 @@ export default function Register() {
   const inviteEmail = searchParams.get("email")
   const isActivation = !!inviteToken
 
-  const [hasTokenError, setHasTokenError] = useState(false)
-
   useEffect(() => {
-    if (isActivation) {
-      if (!inviteEmail) {
-        // Missing essential data to map the token
-        setHasTokenError(true)
-        setMessage({ type: "error", text: "Invalid or expired invite link. Please make sure you copied the entire link." })
-      } else {
-        setEmail(inviteEmail)
-      }
+    if (isActivation && inviteEmail) {
+      setEmail(inviteEmail)
     }
-  }, [isActivation, inviteEmail, inviteToken])
+  }, [isActivation, inviteEmail])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,14 +97,7 @@ export default function Register() {
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            {hasTokenError ? (
-               <div className="py-8 text-center">
-                 <p className="text-red-400 font-medium mb-4">This invite link is invalid or has expired.</p>
-                 <Link to="/login" className="inline-block bg-white/20 px-6 py-2 rounded-lg text-white hover:bg-white/30 transition">Return to Login</Link>
-               </div>
-            ) : (
-            <>
-              {!isActivation && (
+            {!isActivation && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-white/80" htmlFor="name">Name</label>
@@ -260,8 +245,6 @@ export default function Register() {
             >
               {loading ? (isActivation ? "Activating..." : "Signing up...") : (isActivation ? "Activate" : "Sign up")}
             </button>
-            </>
-            )}
           </form>
 
           <p className="mt-4 text-center text-sm text-white/60">
